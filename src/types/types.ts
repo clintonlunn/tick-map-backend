@@ -11,4 +11,5 @@ export type Tick = {
   source: string
   lat: number
   lng: number
+  username: string
 }

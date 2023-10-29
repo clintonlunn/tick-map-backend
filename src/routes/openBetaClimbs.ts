@@ -13,7 +13,6 @@ const router = express.Router()
 router.get(
   '/fetch-from-openbeta/:username',
   async (req: Request, res: Response) => {
-    console.log('asdfghjkl111')
     try {
       const username = req.params.username
 
@@ -27,14 +26,15 @@ router.get(
           tick.lat = climbDetails.metadata.lat
           tick.lng = climbDetails.metadata.lng
 
+          // Enrich user ticks with username
+          tick.username = username
+
           // Store enriched tick in your database
           await saveTickToDatabase(tick)
 
           return tick
         })
       )
-
-      console.log(res.json(enrichedUserTicks))
 
       res.json(enrichedUserTicks)
     } catch (error) {

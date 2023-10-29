@@ -17,8 +17,7 @@ router.get('/', async (req, res) => {
     const result = await db.query('SELECT * FROM user_ticks')
     res.json(result.rows)
   } catch (err) {
-    console.error('Error fetching climbs:', err)
-    res.status(500).send('Internal Server Error')
+    res.status(500).send('Error fetching climbs')
   }
 })
 
@@ -35,16 +34,12 @@ router.get('/', async (req, res) => {
  * // Replace {username} with an actual username
  */
 router.get('/:username', async (req: Request, res: Response) => {
-  const getQuery = `
-        SELECT * FROM user_ticks
-        WHERE username = $1
-    `
+  const getQuery = `SELECT * FROM user_ticks WHERE username = $1`
   try {
-    const result = await db.query(getQuery, [req.params.username]) // Use req.params.username instead of req.params.id
+    const result = await db.query(getQuery, [req.params.username])
     res.json(result.rows)
   } catch (err) {
-    console.error('Error fetching climbs:', err)
-    res.status(500).send('Internal Server Error')
+    res.status(500).send('Error fetching climbs')
   }
 })
 
@@ -58,7 +53,7 @@ router.get('/:username', async (req: Request, res: Response) => {
  *
  * @example
  // curl -X POST http://localhost:3001/internal-climbs -H "Content-Type: application/json" -d '{
-* //     "id": "b648a2c0-f46e-4c2e-8d1a-c7df0e21802f",
+* //     "id": "f46e4c2e8d1ac7df0e21802f",
 * //     "userId": "30f71f16-39bf-4b57-93c2-b10495f60125",
 * //     "name": "Dummy Climb Name",
 * //     "notes": "Dummy Notes",
@@ -70,10 +65,10 @@ router.get('/:username', async (req: Request, res: Response) => {
 * //     "source": "MP",
 * //     "lat": 40.44548,
 * //     "lng": -111.69298
+* //     "username": "Dummy Username"
 * // }'
  */
 router.post('/', async (req: Request, res: Response) => {
-  console.log('POST /internal-climbs hit')
   const {
     id,
     userId,
@@ -87,17 +82,30 @@ router.post('/', async (req: Request, res: Response) => {
     source,
     lat,
     lng,
+    username,
   } = req.body
 
-  console.log('req.body:', req.body)
-
-  try {
-    const insertQuery = `
-            INSERT INTO user_ticks(_id, user_id, name, notes, climb_id, style, attempt_type, date_climbed, grade, source, lat, lng)
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  const upsertQuery = `
+            INSERT INTO user_ticks(_id, user_id, name, notes, climb_id, style, attempt_type, date_climbed, grade, source, lat, lng, username)
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            ON CONFLICT (_id) 
+            DO UPDATE SET
+                user_id = $2, 
+                name = $3, 
+                notes = $4, 
+                climb_id = $5, 
+                style = $6, 
+                attempt_type = $7, 
+                date_climbed = $8, 
+                grade = $9, 
+                source = $10, 
+                lat = $11, 
+                lng = $12,
+                username = $13;
         `
 
-    await db.query(insertQuery, [
+  try {
+    await db.query(upsertQuery, [
       id,
       userId,
       name,
@@ -110,37 +118,34 @@ router.post('/', async (req: Request, res: Response) => {
       source,
       lat,
       lng,
+      username,
     ])
-    res.status(201).send('Climb data added successfully!')
+    res.status(201).send('Climb data added successfully! \n')
   } catch (err) {
-    console.error('Error inserting data:', err)
-    res.status(500).send('Internal Server Error')
+    res.status(500).send('Error adding climb')
   }
 })
 
-/**
- * DELETE all climbs.
- *
- * @route DELETE /internal-climbs/all
- *
- * @returns {string} Success message.
- *
- * @example
- * // curl -X DELETE http://localhost:3001/internal-climbs/all
- */
-router.delete('/all', async (req: Request, res: Response) => {
-  const deleteAllQuery = `
-        DELETE FROM user_ticks
-    `
+// /**
+//  * DELETE all climbs.
+//  *
+//  * @route DELETE /internal-climbs/all
+//  *
+//  * @returns {string} Success message.
+//  *
+//  * @example
+//  * // curl -X DELETE http://localhost:3001/internal-climbs/all
+//  */
+// router.delete('/all', async (req: Request, res: Response) => {
+//   const deleteAllQuery = `DELETE FROM user_ticks`
+//   try {
+//     await db.query(deleteAllQuery)
+//     res.status(200).send('All climbs deleted successfully! \n')
+//   } catch (err) {
+//     res.status(500).send('Error deleting climbs')
+//   }
+// })
 
-  try {
-    await db.query(deleteAllQuery)
-    res.status(200).send('All climbs deleted successfully!')
-  } catch (err) {
-    console.error('Error deleting all climbs:', err)
-    res.status(500).send('Internal Server Error')
-  }
-})
 /**
  * DELETE a climb by ID.
  *
@@ -154,21 +159,16 @@ router.delete('/all', async (req: Request, res: Response) => {
  * // Replace {id} with an actual climb ID
  */
 router.delete('/:id', async (req: Request, res: Response) => {
-  const deleteQuery = `
-    DELETE FROM user_ticks
-    WHERE _id = $1
-    `
-
+  const deleteQuery = `DELETE FROM user_ticks WHERE _id = $1`
   try {
     const result = await db.query(deleteQuery, [req.params.id])
     if (result.rowCount === 0) {
-      res.status(404).send('Climb not found!')
+      res.status(404).send('Climb not found')
     } else {
-      res.status(200).send('Climb deleted successfully!')
+      res.status(200).send('Climb deleted successfully! \n')
     }
   } catch (err) {
-    console.error('Error deleting data:', err)
-    res.status(500).send('Internal Server Error')
+    res.status(500).send('Error deleting climb')
   }
 })
 

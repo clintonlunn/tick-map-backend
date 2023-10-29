@@ -104,49 +104,54 @@ export const fetchClimbDetails = async (climbId: string) => {
 export const saveTickToDatabase = async (tick: Tick) => {
   console.log('Saving tick to database:', tick)
   // Insert the enriched tick into your database
-  const insertQuery = `
-        INSERT INTO user_ticks (
-            _id,
-            user_id,
-            name,
-            notes,
-            climb_id,
-            style,
-            attempt_type,
-            date_climbed,
-            grade,
-            source,
-            lat,
-            lng
-        )
-        VALUES (
-            $1,
-            $2,
-            $3,
-            $4,
-            $5,
-            $6,
-            $7,
-            $8,
-            $9,
-            $10,
-            $11,
-            $12
-        )
-    `
+  const {
+    _id,
+    userId,
+    name,
+    notes,
+    climbId,
+    style,
+    attemptType,
+    dateClimbed,
+    grade,
+    source,
+    lat,
+    lng,
+    username,
+  } = tick
 
-  await db.query(insertQuery, [
-    tick._id,
-    tick.userId,
-    tick.name,
-    tick.notes,
-    tick.climbId,
-    tick.style,
-    tick.attemptType,
-    tick.dateClimbed,
-    tick.grade,
-    tick.source,
-    tick.lat,
-    tick.lng,
+  const upsertQuery = `
+            INSERT INTO user_ticks(_id, user_id, name, notes, climb_id, style, attempt_type, date_climbed, grade, source, lat, lng, username)
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            ON CONFLICT (_id) 
+            DO UPDATE SET
+                user_id = $2, 
+                name = $3, 
+                notes = $4, 
+                climb_id = $5, 
+                style = $6, 
+                attempt_type = $7, 
+                date_climbed = $8, 
+                grade = $9, 
+                source = $10, 
+                lat = $11, 
+                lng = $12,
+                username = $13;
+        `
+
+  await db.query(upsertQuery, [
+    _id,
+    userId,
+    name,
+    notes,
+    climbId,
+    style,
+    attemptType,
+    dateClimbed,
+    grade,
+    source,
+    lat,
+    lng,
+    username,
   ])
 }
