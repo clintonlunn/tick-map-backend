@@ -35,8 +35,14 @@ router.get('/', async (req, res) => {
  */
 router.get('/:username', async (req: Request, res: Response) => {
   const getQuery = `SELECT * FROM user_ticks WHERE username = $1`
+
   try {
     const result = await db.query(getQuery, [req.params.username])
+    if (result.rowCount === 0) {
+      res
+        .status(404)
+        .send('Climbs not found. You may need to import data from OpenBeta. \n')
+    }
     res.json(result.rows)
   } catch (err) {
     res.status(500).send('Error fetching climbs')
