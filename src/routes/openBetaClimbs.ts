@@ -18,6 +18,14 @@ router.get(
       // Fetch user ticks from OpenBeta
       const userTicks = await fetchUserTicksFromOpenBeta(username)
 
+      if (!userTicks || userTicks.length === 0) {
+        return res
+          .status(404)
+          .send(
+            'Climbs not found. You may need to import data into OpenBeta. \n'
+          )
+      }
+
       // Fetch lat/lng for each climb and enrich user ticks
       const enrichUserTicks = await Promise.all(
         userTicks.map(async (tick: Tick) => {
