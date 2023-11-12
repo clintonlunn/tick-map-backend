@@ -1,46 +1,6 @@
-// const express = require('express');
-// const axios = require('axios');
-// const router = express.Router();
-// const db = require('../database'); // Assuming you've set up a connection to your database
-
 import axios from 'axios'
 import { Tick } from '../types/types'
 import db from '../database'
-
-// // curl -X GET http://localhost:3001/openbeta-climbs/fetch-from-openbeta/:username
-
-// // GET all climbs from OpenBeta
-// router.get('/fetch-from-openbeta/:username', async (req, res) => {
-//     console.log("asdfghjkl111");
-//     try {
-//         const username = req.params.username;
-
-//         // Fetch user ticks from OpenBeta
-//         const userTicks = await fetchUserTicksFromOpenBeta(username);
-
-//         // Fetch lat/lng for each climb and enrich user ticks
-//         const enrichedUserTicks = await Promise.all(userTicks.map(async (tick) => {
-//             const climbDetails = await fetchClimbDetails(tick.climbId);
-//             tick.lat = climbDetails.metadata.lat;
-//             tick.lng = climbDetails.metadata.lng;
-
-//             // Store enriched tick in your database
-//             await saveTickToDatabase(tick);
-
-//             return tick;
-//         }));
-
-//         console.log(res.json(enrichedUserTicks));
-
-//         res.json(enrichedUserTicks);
-
-//     } catch (error) {
-//         console.error('Error fetching climbs:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// });
-
-// module.exports = router;
 
 export const fetchUserTicksFromOpenBeta = async (username: string) => {
   const query = `
@@ -102,8 +62,7 @@ export const fetchClimbDetails = async (climbId: string) => {
 }
 
 export const saveTickToDatabase = async (tick: Tick) => {
-  console.log('Saving tick to database:', tick)
-  // Insert the enriched tick into your database
+  // Insert the enriched tick into database
   const {
     _id,
     userId,

@@ -39,7 +39,7 @@ router.get('/:username', async (req: Request, res: Response) => {
   try {
     const result = await db.query(getQuery, [req.params.username])
     if (result.rowCount === 0) {
-      res
+      return res
         .status(404)
         .send('Climbs not found. You may need to import data from OpenBeta. \n')
     }
