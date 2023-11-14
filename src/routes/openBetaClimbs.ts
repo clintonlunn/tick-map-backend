@@ -37,10 +37,52 @@ router.get(
             climbDetails.metadata !== null &&
             climbDetails.metadata !== undefined
           ) {
+            // Enrich user ticks with lat/lng
             tick.lat = climbDetails.metadata.lat
             tick.lng = climbDetails.metadata.lng
+
             // Enrich user ticks with username
             tick.username = username
+
+            // Enrich user ticks with areaName and areaId
+            tick.areaName = climbDetails.parent.areaName
+            tick.areaId = climbDetails.parent.metadata.areaId
+
+            // Enrich user ticks with bbox
+            if (climbDetails.parent.metadata.bbox) {
+              tick.bbox = climbDetails.parent.metadata.bbox
+            }
+
+            // Enrich user ticks with mp_id
+            if (climbDetails.parent.metadata.mp_id) {
+              tick.mp_id = climbDetails.parent.metadata.mp_id
+            }
+
+            // Enrich user ticks with climb_type
+            if (climbDetails.type) {
+              tick.climb_type = {
+                trad: climbDetails.type?.trad ?? undefined,
+                sport: climbDetails.type?.sport ?? undefined,
+                bouldering: climbDetails.type?.bouldering ?? undefined,
+                deepwatersolo: climbDetails.type?.deepwatersolo ?? undefined,
+                snow: climbDetails.type?.snow ?? undefined,
+                ice: climbDetails.type?.ice ?? undefined,
+                mixed: climbDetails.type?.mixed ?? undefined,
+                tr: climbDetails.type?.tr ?? undefined,
+                aid: climbDetails.type?.aid ?? undefined,
+                alpine: climbDetails.type?.alpine ?? undefined,
+              }
+            }
+
+            // Enrich user ticks with pathTokens
+            if (climbDetails.pathTokens) {
+              tick.pathTokens = climbDetails.pathTokens
+            }
+
+            // Enrich user ticks with ancestors
+            if (climbDetails.ancestors) {
+              tick.ancestors = climbDetails.ancestors
+            }
           }
 
           //only save valid ticks to database
