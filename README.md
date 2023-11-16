@@ -42,7 +42,6 @@ docker-compose up
 ## Docker-compose.yml
 
 ```bash
-cat docker-compose.yml 
 version: "3.8"
 services:
   db:
