@@ -29,7 +29,12 @@ This is the backend service that contains the REST service for the [tick-map-cli
 
 ## Running the Service
 
-To run the service, use Docker Compose:
+To start the backend service:
+    ```bash
+    yarn start
+    ```
+
+To spin up the database, use Docker Compose:
 
 ```bash
 docker-compose up
