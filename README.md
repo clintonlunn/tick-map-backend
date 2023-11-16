@@ -19,7 +19,6 @@ This is the backend service that contains the REST service for the [tick-map-cli
     ```bash
     cd tick-map-backend
     ```
-    Replace `repository` with the name of your repository.
 
 3. Install the dependencies:
     ```bash
