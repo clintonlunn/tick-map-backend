@@ -1,6 +1,6 @@
-# Backend Service
+# Tick Map Backend
 
-This is the backend service for our application.
+This is the backend service that contains the REST service for the [tick-map-client](https://github.com/clintonlunn/tick-map-client/)
 
 ## Prerequisites
 
