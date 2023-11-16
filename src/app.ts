@@ -2,6 +2,7 @@ import express, { json } from 'express'
 import cors from 'cors'
 import internalClimbsRoute from './routes/internalClimbs'
 import openBetaClimbsRoute from './routes/openBetaClimbs'
+import userRoute from './routes/users'
 
 const app = express()
 
@@ -13,10 +14,6 @@ app.use(
 )
 app.use('/internal-climbs', internalClimbsRoute)
 app.use('/openbeta-climbs', openBetaClimbsRoute)
-
-// Example of a route
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('Hello from Tick Map Backend!')
-// })
+app.use('/users', userRoute)
 
 export default app

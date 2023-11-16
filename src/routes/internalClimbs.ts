@@ -12,7 +12,7 @@ const router = express.Router()
  * @example
  * // curl -X GET http://localhost:3001/internal-climbs/
  */
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const result = await db.query('SELECT * FROM user_ticks')
     res.json(result.rows)
