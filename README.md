@@ -14,7 +14,6 @@ This is the backend service that contains the REST service for the [tick-map-cli
     ```bash
     git clone git@github.com:clintonlunn/tick-map-backend.git
     ```
-    Replace `username/repository.git` with the path to your actual repository.
 
 2. Navigate to the project directory:
     ```bash
