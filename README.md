@@ -18,13 +18,13 @@ This is the backend service for our application.
 
 2. Navigate to the project directory:
     ```bash
-    cd repository
+    cd tick-map-backend
     ```
     Replace `repository` with the name of your repository.
 
 3. Install the dependencies:
     ```bash
-    npm install
+    yarn
     ```
 
 ## Running the Service
